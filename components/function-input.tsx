@@ -3,116 +3,140 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { Sparkles, Zap } from "lucide-react";
+import { Activity, Lightbulb, Sparkles, ArrowRight } from "lucide-react";
 
 interface FunctionInputProps {
-  onAnalyze: (fn: string) => void;
+  onAnalyze: (func: string) => void;
   isLoading: boolean;
 }
 
-const singleVarExamples = [
-  { label: "Cubic", fn: "x^3 - 3x + 2", color: "bg-chart-1/10 border-chart-1/30 hover:bg-chart-1/20" },
-  { label: "Quadratic", fn: "x^2 - 4x + 3", color: "bg-chart-2/10 border-chart-2/30 hover:bg-chart-2/20" },
-  { label: "Trig", fn: "sin(x)", color: "bg-chart-3/10 border-chart-3/30 hover:bg-chart-3/20" },
+const sampleFunctions = [
+  { func: "x^2 + y^2", description: "Simple paraboloid (minimum at origin)", type: "min" },
+  { func: "x^2 - y^2", description: "Hyperbolic paraboloid (saddle point)", type: "saddle" },
+  { func: "-x^2 - y^2", description: "Inverted paraboloid (maximum)", type: "max" },
+  { func: "x^3 - 3*x*y^2", description: "Monkey saddle", type: "special" },
+  { func: "sin(x) * cos(y)", description: "Wave surface", type: "special" },
+  { func: "x^2 + y^2 - 2*x - 4*y + 5", description: "Shifted paraboloid", type: "min" },
+  { func: "(x^2 + y^2)^2 - 2*(x^2 - y^2)", description: "Lemniscate surface", type: "special" },
+  { func: "x*y*exp(-(x^2+y^2))", description: "Gaussian saddle", type: "saddle" },
 ];
 
-const multiVarExamples = [
-  { label: "f(x,y)", fn: "x^2 + y^2", color: "bg-chart-4/10 border-chart-4/30 hover:bg-chart-4/20" },
-  { label: "f(x,y,z)", fn: "x^2 + y^2 + z^2", color: "bg-chart-5/10 border-chart-5/30 hover:bg-chart-5/20" },
-  { label: "Mixed", fn: "x*y + y*z + x*z", color: "bg-primary/10 border-primary/30 hover:bg-primary/20" },
-  { label: "Saddle", fn: "x^2 - y^2", color: "bg-accent/10 border-accent/30 hover:bg-accent/20" },
-];
+const typeColors = {
+  min: "from-chart-1 to-emerald-500",
+  max: "from-chart-2 to-rose-500",
+  saddle: "from-chart-3 to-amber-500",
+  special: "from-primary to-violet-500",
+};
 
 export function FunctionInput({ onAnalyze, isLoading }: FunctionInputProps) {
-  const [functionInput, setFunctionInput] = useState("x^3 - 3x + 2");
+  const [func, setFunc] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (functionInput.trim()) {
-      onAnalyze(functionInput.trim());
+    if (func.trim()) {
+      onAnalyze(func.trim());
     }
   };
 
+  const handleSampleClick = (sample: string) => {
+    setFunc(sample);
+    onAnalyze(sample);
+  };
+
   return (
-    <div className="space-y-5">
-      <form onSubmit={handleSubmit} className="relative">
-        <div className="flex flex-col gap-3 sm:flex-row p-2 rounded-2xl bg-card border border-border/50 shadow-lg shadow-primary/5">
-          <div className="flex-1 relative">
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
-              <span className="font-mono text-lg font-semibold">f(...) =</span>
-            </div>
-            <label htmlFor="function-input" className="sr-only">
-              Enter function f(x)
-            </label>
-            <Input
-              id="function-input"
-              type="text"
-              placeholder="x^3 - 3x + 2 or x^2 + y^2"
-              value={functionInput}
-              onChange={(e) => setFunctionInput(e.target.value)}
-              className="h-14 pl-20 text-lg font-mono bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-              disabled={isLoading}
-            />
-          </div>
-          <Button
-            type="submit"
-            disabled={isLoading || !functionInput.trim()}
-            className="h-14 px-8 text-base font-semibold rounded-xl bg-primary hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25"
-          >
-            {isLoading ? (
-              <>
-                <Spinner className="mr-2 h-5 w-5" />
-                Analyzing...
-              </>
-            ) : (
-              <>
-                <Zap className="mr-2 h-5 w-5" />
-                Analyze
-              </>
-            )}
-          </Button>
-        </div>
-      </form>
+    <div className="space-y-8">
+      {/* Main Input Card */}
+      <div className="relative group">
+        {/* Animated border gradient */}
+        <div className={`absolute -inset-0.5 bg-gradient-to-r from-primary via-chart-1 to-chart-5 rounded-2xl transition-opacity duration-500 ${isFocused ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'} blur-sm`} />
+        <div className={`absolute -inset-0.5 bg-gradient-to-r from-primary via-chart-1 to-chart-5 rounded-2xl transition-opacity duration-500 ${isFocused ? 'opacity-75' : 'opacity-0 group-hover:opacity-30'}`} />
+        
+        <Card className="relative border-0 bg-card/95 backdrop-blur-xl shadow-2xl shadow-primary/10">
+          <CardContent className="pt-8 pb-8 px-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Label */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-chart-1 shadow-lg shadow-primary/25">
+                  <Sparkles className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">Enter Your Function</h3>
+                  <p className="text-sm text-muted-foreground">Type a function of two variables f(x, y)</p>
+                </div>
+              </div>
 
-      <div className="space-y-3">
-        {/* Single Variable Examples */}
-        <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <Sparkles className="h-4 w-4" />
-            <span>Single variable:</span>
-          </div>
-          {singleVarExamples.map((example) => (
-            <Button
-              key={example.fn}
-              variant="outline"
-              size="sm"
-              onClick={() => setFunctionInput(example.fn)}
-              className={`font-mono text-xs rounded-full border transition-all duration-200 ${example.color}`}
-              disabled={isLoading}
-            >
-              {example.label}
-            </Button>
-          ))}
-        </div>
+              {/* Input Row */}
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <div className="relative flex-1 group/input">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground font-mono text-sm font-semibold">
+                    f(x,y) =
+                  </span>
+                  <Input
+                    value={func}
+                    onChange={(e) => setFunc(e.target.value)}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    placeholder="x^2 + y^2"
+                    className="pl-24 h-14 text-lg font-mono bg-muted/30 border-2 border-border/50 focus:border-primary/50 rounded-xl transition-all duration-300 placeholder:text-muted-foreground/50"
+                    disabled={isLoading}
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={!func.trim() || isLoading}
+                  className="relative h-14 px-8 gap-3 rounded-xl text-base font-semibold bg-gradient-to-r from-primary to-chart-1 hover:from-primary/90 hover:to-chart-1/90 shadow-lg shadow-primary/25 transition-all duration-300 hover:shadow-xl hover:shadow-primary/30 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 overflow-hidden group/btn"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                  {isLoading ? (
+                    <>
+                      <Spinner className="h-5 w-5" />
+                      <span>Analyzing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Activity className="h-5 w-5" />
+                      <span>Analyze</span>
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
 
-        {/* Multi Variable Examples */}
-        <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span>Multi-variable:</span>
+      {/* Sample Functions */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-3 text-sm">
+          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20">
+            <Lightbulb className="h-4 w-4 text-amber-500" />
           </div>
-          {multiVarExamples.map((example) => (
-            <Button
-              key={example.fn}
-              variant="outline"
-              size="sm"
-              onClick={() => setFunctionInput(example.fn)}
-              className={`font-mono text-xs rounded-full border transition-all duration-200 ${example.color}`}
+          <span className="font-medium text-muted-foreground">Try one of these examples:</span>
+        </div>
+        <div className="flex flex-wrap gap-3 stagger-children">
+          {sampleFunctions.map((sample, index) => (
+            <button
+              key={index}
+              onClick={() => handleSampleClick(sample.func)}
               disabled={isLoading}
+              className="group relative px-4 py-2.5 text-sm font-mono bg-card/80 hover:bg-card rounded-xl border border-border/50 transition-all duration-300 hover:border-primary/50 disabled:opacity-50 hover:scale-105 hover:shadow-lg hover:shadow-primary/10"
             >
-              {example.label}
-            </Button>
+              {/* Gradient indicator */}
+              <div className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-xl bg-gradient-to-b ${typeColors[sample.type as keyof typeof typeColors]} opacity-50 group-hover:opacity-100 transition-opacity`} />
+              
+              <span className="font-semibold">{sample.func}</span>
+              
+              {/* Tooltip */}
+              <span className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-2 text-xs font-sans bg-popover text-popover-foreground rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none z-10 border border-border/50 translate-y-2 group-hover:translate-y-0">
+                {sample.description}
+                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-popover border-r border-b border-border/50 rotate-45" />
+              </span>
+            </button>
           ))}
         </div>
       </div>

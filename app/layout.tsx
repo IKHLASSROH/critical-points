@@ -1,16 +1,34 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Inter, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({ 
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+});
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f8fafc' },
+    { media: '(prefers-color-scheme: dark)', color: '#0c0a1d' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+}
 
 export const metadata: Metadata = {
-  title: 'Function Analyzer by Rohni Ikhlass - Mathematical Analysis Tool',
-  description: 'A powerful mathematical function analyzer created by Rohni Ikhlass. Compute derivatives, find critical points, determine min/max values, detect inflection points, and visualize graphs with beautiful interactive charts.',
-  authors: [{ name: 'Rohni Ikhlass' }],
+  title: 'Calculus Analyzer | by Rohni Ikhlass',
+  description: 'Analyze multivariable functions with partial derivatives, critical points, Hessian matrices, and 3D visualization. A study project by Rohni Ikhlass for learning multivariable calculus.',
   generator: 'v0.app',
+  authors: [{ name: 'Rohni Ikhlass', url: 'https://www.linkedin.com/in/ikhlass-rohni-b74200336/' }],
+  keywords: ['calculus', 'multivariable', 'derivatives', 'critical points', 'hessian', '3D visualization', 'math', 'education'],
+  creator: 'Rohni Ikhlass',
   icons: {
     icon: [
       {
@@ -36,8 +54,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="font-sans antialiased">
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
