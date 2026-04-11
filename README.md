@@ -1,1 +1,0 @@
-# critical-points

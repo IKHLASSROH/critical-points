@@ -49,8 +49,20 @@ interface InflectionPoint {
   explanation: string;
 }
 
+interface PartialDerivative {
+  variable: string;
+  first: string;
+  second: string;
+}
+
+interface MixedPartial {
+  variables: string;
+  derivative: string;
+}
+
 interface AnalysisResult {
   originalFunction: string;
+  variables: string[];
   firstDerivative: string;
   secondDerivative: string;
   criticalPoints: CriticalPoint[];
@@ -62,6 +74,10 @@ interface AnalysisResult {
     concaveDown: string[];
   };
   tableOfValues: { x: number; y: number }[];
+  partialDerivatives: PartialDerivative[];
+  gradient: string;
+  hessianMatrix: string[][];
+  mixedPartials: MixedPartial[];
   steps: string[];
 }
 
@@ -349,9 +365,9 @@ export default function Home() {
         {/* Results */}
         {result && (
           <div className="space-y-6 lg:space-y-8">
-            {/* Function and Derivatives */}
+            {/* Function Header with Variables */}
             <div
-              className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-slide-up"
+              className="animate-slide-up"
               style={{ animationDelay: "0.1s" }}
             >
               <ResultCard
@@ -360,68 +376,228 @@ export default function Home() {
                 variant="highlight"
                 className="glass-card glow-border"
               >
-                <p className="font-mono text-lg lg:text-xl font-medium">
-                  f(x) = {result.originalFunction}
-                </p>
-              </ResultCard>
-
-              <ResultCard
-                title="First Derivative"
-                icon={<Diff className="h-4 w-4" />}
-                className="glass-card"
-              >
-                <p className="font-mono text-lg lg:text-xl">
-                  {"f'(x)"} = {result.firstDerivative}
-                </p>
-              </ResultCard>
-
-              <ResultCard
-                title="Second Derivative"
-                icon={<Diff className="h-4 w-4" />}
-                className="glass-card"
-              >
-                <p className="font-mono text-lg lg:text-xl">
-                  {"f''(x)"} = {result.secondDerivative}
-                </p>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                  <p className="font-mono text-lg lg:text-xl font-medium">
+                    f({result.variables.join(", ")}) = {result.originalFunction}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Variables:</span>
+                    <div className="flex gap-1">
+                      {result.variables.map((v) => (
+                        <span
+                          key={v}
+                          className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-mono font-semibold"
+                        >
+                          {v}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </ResultCard>
             </div>
 
-            {/* Graph */}
-            <div
-              className="animate-slide-up"
-              style={{ animationDelay: "0.2s" }}
-            >
-              <ResultCard title="" className="p-4 lg:p-6 glass-card overflow-hidden">
-                <FunctionGraph
-                  data={result.tableOfValues}
-                  criticalPoints={result.criticalPoints}
-                  inflectionPoints={result.inflectionPoints}
-                  functionName={result.originalFunction}
-                />
-              </ResultCard>
-            </div>
-
-            {/* Critical Points and Intervals */}
-            <div
-              className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 animate-slide-up"
-              style={{ animationDelay: "0.3s" }}
-            >
-              <ResultCard
-                title="Critical Points"
-                icon={<Target className="h-4 w-4" />}
-                className="glass-card"
+            {/* Partial Derivatives for Multi-Variable */}
+            {result.variables.length > 1 && (
+              <div
+                className="animate-slide-up"
+                style={{ animationDelay: "0.15s" }}
               >
-                <CriticalPointsDisplay points={result.criticalPoints} />
-              </ResultCard>
+                <ResultCard
+                  title="Partial Derivatives"
+                  icon={<Diff className="h-4 w-4" />}
+                  className="glass-card"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {result.partialDerivatives.map((pd) => (
+                      <div
+                        key={pd.variable}
+                        className="p-4 rounded-xl bg-secondary/50 border border-border/50 hover-lift transition-all duration-300"
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center font-mono font-bold text-primary">
+                            {pd.variable}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            with respect to {pd.variable}
+                          </span>
+                        </div>
+                        <div className="space-y-2 font-mono text-sm">
+                          <p>
+                            <span className="text-muted-foreground">First: </span>
+                            <span className="font-semibold">df/d{pd.variable} = {pd.first}</span>
+                          </p>
+                          <p>
+                            <span className="text-muted-foreground">Second: </span>
+                            <span className="font-semibold">d²f/d{pd.variable}² = {pd.second}</span>
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ResultCard>
+              </div>
+            )}
 
-              <ResultCard
-                title="Intervals"
-                icon={<TrendingUp className="h-4 w-4" />}
-                className="glass-card"
+            {/* Gradient Vector for Multi-Variable */}
+            {result.variables.length > 1 && (
+              <div
+                className="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-slide-up"
+                style={{ animationDelay: "0.18s" }}
               >
-                <IntervalsDisplay intervals={result.intervals} />
-              </ResultCard>
-            </div>
+                <ResultCard
+                  title="Gradient Vector"
+                  icon={<TrendingUp className="h-4 w-4" />}
+                  variant="highlight"
+                  className="glass-card"
+                >
+                  <div className="space-y-3">
+                    <p className="font-mono text-lg">
+                      <span className="text-primary font-bold">nabla f = </span>
+                      {result.gradient}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      The gradient points in the direction of steepest ascent
+                    </p>
+                  </div>
+                </ResultCard>
+
+                {result.mixedPartials.length > 0 && (
+                  <ResultCard
+                    title="Mixed Partial Derivatives"
+                    icon={<Braces className="h-4 w-4" />}
+                    className="glass-card"
+                  >
+                    <div className="space-y-2">
+                      {result.mixedPartials.map((mp, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between p-2 rounded-lg bg-secondary/30"
+                        >
+                          <span className="font-mono text-sm text-muted-foreground">
+                            {mp.variables}
+                          </span>
+                          <span className="font-mono font-semibold">
+                            {mp.derivative}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </ResultCard>
+                )}
+              </div>
+            )}
+
+            {/* Hessian Matrix for Multi-Variable */}
+            {result.variables.length > 1 && result.hessianMatrix.length > 0 && (
+              <div
+                className="animate-slide-up"
+                style={{ animationDelay: "0.2s" }}
+              >
+                <ResultCard
+                  title="Hessian Matrix"
+                  icon={<Layers className="h-4 w-4" />}
+                  className="glass-card"
+                >
+                  <div className="space-y-3">
+                    <p className="text-sm text-muted-foreground">
+                      Matrix of second-order partial derivatives (used for classifying critical points)
+                    </p>
+                    <div className="overflow-x-auto">
+                      <div className="inline-block min-w-full">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-light text-muted-foreground">[</span>
+                          <div className="flex flex-col gap-1">
+                            {result.hessianMatrix.map((row, i) => (
+                              <div key={i} className="flex gap-3">
+                                {row.map((cell, j) => (
+                                  <span
+                                    key={j}
+                                    className="min-w-[80px] text-center font-mono text-sm p-2 rounded bg-secondary/50"
+                                  >
+                                    {cell}
+                                  </span>
+                                ))}
+                              </div>
+                            ))}
+                          </div>
+                          <span className="text-2xl font-light text-muted-foreground">]</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ResultCard>
+              </div>
+            )}
+
+            {/* Single Variable Derivatives */}
+            {result.variables.length === 1 && (
+              <div
+                className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-slide-up"
+                style={{ animationDelay: "0.15s" }}
+              >
+                <ResultCard
+                  title="First Derivative"
+                  icon={<Diff className="h-4 w-4" />}
+                  className="glass-card"
+                >
+                  <p className="font-mono text-lg lg:text-xl">
+                    {"f'"}({result.variables[0]}) = {result.firstDerivative}
+                  </p>
+                </ResultCard>
+
+                <ResultCard
+                  title="Second Derivative"
+                  icon={<Diff className="h-4 w-4" />}
+                  className="glass-card"
+                >
+                  <p className="font-mono text-lg lg:text-xl">
+                    {"f''"}({result.variables[0]}) = {result.secondDerivative}
+                  </p>
+                </ResultCard>
+              </div>
+            )}
+
+            {/* Graph - Only for single variable functions */}
+            {result.variables.length === 1 && result.tableOfValues.length > 0 && (
+              <div
+                className="animate-slide-up"
+                style={{ animationDelay: "0.25s" }}
+              >
+                <ResultCard title="" className="p-4 lg:p-6 glass-card overflow-hidden">
+                  <FunctionGraph
+                    data={result.tableOfValues}
+                    criticalPoints={result.criticalPoints}
+                    inflectionPoints={result.inflectionPoints}
+                    functionName={result.originalFunction}
+                  />
+                </ResultCard>
+              </div>
+            )}
+
+            {/* Critical Points and Intervals - Only for single variable */}
+            {result.variables.length === 1 && (
+              <div
+                className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 animate-slide-up"
+                style={{ animationDelay: "0.3s" }}
+              >
+                <ResultCard
+                  title="Critical Points"
+                  icon={<Target className="h-4 w-4" />}
+                  className="glass-card"
+                >
+                  <CriticalPointsDisplay points={result.criticalPoints} />
+                </ResultCard>
+
+                <ResultCard
+                  title="Intervals"
+                  icon={<TrendingUp className="h-4 w-4" />}
+                  className="glass-card"
+                >
+                  <IntervalsDisplay intervals={result.intervals} />
+                </ResultCard>
+              </div>
+            )}
 
             {/* Inflection Points */}
             {result.inflectionPoints.length > 0 && (
