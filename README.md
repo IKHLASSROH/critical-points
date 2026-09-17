@@ -13,7 +13,7 @@
 
 ## ✨ About
 
-**Critical Points** is a modern and responsive web application developed using **v0** and the **Vibe Coding** workflow.
+**Critical Points** is a modern and responsive web application developed using **v0** and the **Vibe Coding** workflow
 
 The project started with **v0 by Vercel** to rapidly generate the initial interface and structure. From there, I manually customized, refactored, and enhanced the application by editing components, improving layouts, refining the user experience, and adapting the code to match my own vision.
 
