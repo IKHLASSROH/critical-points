@@ -120,7 +120,3 @@ Building this project helped me gain practical experience with:
 GitHub: https://github.com/IKHLASSROH
 
 ---
-
-## ⭐ Support
-
-If you found this project interesting, consider giving it a ⭐ to support my work.
