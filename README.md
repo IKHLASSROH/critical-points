@@ -112,11 +112,3 @@ Building this project helped me gain practical experience with:
 - Deploying production applications on Vercel
 
 ---
-
-## 👩‍💻 Author
-
-**Ikhlass Rohni**
-
-GitHub: https://github.com/IKHLASSROH
-
----
