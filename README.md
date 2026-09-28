@@ -1,4 +1,4 @@
-# 🚦 Critical Points
+# Critical Points
 
 > A modern web application built with **v0**, **Vibe Coding**, and customized through hands-on development.
 
@@ -11,7 +11,7 @@
 
 ---
 
-## ✨ About
+##  About
 
 **Critical Points** is a modern and responsive web application developed using **v0** and the **Vibe Coding** workflow
 
@@ -21,19 +21,19 @@ This project demonstrates how AI-assisted development and manual coding can work
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🎨 Modern and clean user interface
-- 📱 Fully responsive design
-- ⚡ Fast performance with Next.js
-- 🧩 Reusable React components
-- 🎯 Improved UI/UX
-- 🌙 Elegant design system
-- 🚀 Production deployment with Vercel
+- Modern and clean user interface
+- Fully responsive design
+- Fast performance with Next.js
+- Reusable React components
+- Improved UI/UX
+- Elegant design system
+- Production deployment with Vercel
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - Next.js
 - React
@@ -46,7 +46,7 @@ This project demonstrates how AI-assisted development and manual coding can work
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 app/
@@ -59,7 +59,7 @@ styles/
 
 ---
 
-## ⚙️ Getting Started
+##  Getting Started
 
 Clone the repository
 
@@ -93,13 +93,13 @@ http://localhost:3000
 
 ---
 
-## 🌍 Live Demo
+##  Live Demo
 
 🔗 https://critical-points.vercel.app
 
 ---
 
-## 💡 What I Learned
+##  What I Learned
 
 Building this project helped me gain practical experience with:
 
