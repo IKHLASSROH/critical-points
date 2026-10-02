@@ -23,13 +23,13 @@ This project demonstrates how AI-assisted development and manual coding can work
 
 ## Features
 
-- Modern and clean user interface
-- Fully responsive design
-- Fast performance with Next.js
-- Reusable React components
-- Improved UI/UX
-- Elegant design system
-- Production deployment with Vercel
+- Modern and clean user interface.
+- Fully responsive design.
+- Fast performance with Next.js.
+- Reusable React components.
+- Improved UI/UX.
+- Elegant design system.
+- Production deployment with Vercel.
 
 ---
 
