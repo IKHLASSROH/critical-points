@@ -1,4 +1,4 @@
-# Critical Points
+# Critical Points.
 
 > A modern web application built with **v0**, **Vibe Coding**, and customized through hands-on development.
 
