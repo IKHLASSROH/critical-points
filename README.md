@@ -103,12 +103,12 @@ http://localhost:3000
 
 Building this project helped me gain practical experience with:
 
-- AI-assisted web development using **v0**
-- The **Vibe Coding** workflow
-- Reading, understanding, and extending AI-generated code
-- Building reusable React components
-- Developing with the Next.js App Router
-- Creating responsive layouts using Tailwind CSS
-- Deploying production applications on Vercel
+- AI-assisted web development using **v0**.
+- The **Vibe Coding** workflow.
+- Reading, understanding, and extending AI-generated code.
+- Building reusable React components.
+- Developing with the Next.js App Router.
+- Creating responsive layouts using Tailwind CSS.
+- Deploying production applications on Vercel.
 
 ---
