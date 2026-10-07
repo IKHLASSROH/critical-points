@@ -35,14 +35,14 @@ This project demonstrates how AI-assisted development and manual coding can work
 
 ## Tech Stack
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-- v0 by Vercel
-- Vibe Coding
-- Vercel
+- Next.js.
+- React.
+- TypeScript.
+- Tailwind CSS.
+- shadcn/ui.
+- v0 by Vercel.
+- Vibe Coding.
+- Vercel.
 
 ---
 
